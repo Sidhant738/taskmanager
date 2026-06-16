@@ -1,0 +1,146 @@
+.header {
+    height: 100px;
+    width: 100%;
+
+    background-color: rgb(109, 109, 240);
+
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    
+    position: relative;
+
+    padding: 20px 30px;
+    box-sizing: border-box;
+
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+
+    border: 2px solid;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.insideheader {
+    position: absolute;
+    left:50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    flex-direction: column;   /* Stack items vertically */
+    justify-content: center;
+}
+
+.insideheader h2 {
+    margin: 0 0 10px 0;
+}
+
+.navbar {
+    display: flex;
+    gap: 15px;
+}
+
+.navbar button {
+    padding: 6px 12px;
+    background-color: rgb(109, 109, 240);
+    border: none;
+    
+}
+.navbar button:hover{
+  color: black;
+}
+.logo:hover{
+    border-color: black;
+}
+.cardAreaHeader{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+.cardAreaHeader h3{
+    margin: 30px;
+}
+.searchbar{
+    margin: 30px;
+
+    display: flex;
+    align-items: center;
+}
+.searchbar input{
+  height: 20px;
+  width: 300px;
+
+  color: black;
+
+  padding-left: 10px;
+
+  background-color: rgb(200, 200, 245);
+
+  border-top-left-radius:30px;
+  border-bottom-left-radius:30px;
+  border: none;
+}
+.searchbar button{
+  height:22px;
+  width: 70px;
+  
+  background-color: rgb(76, 76, 82);
+  border-top-right-radius:30px;
+  border-bottom-right-radius:30px;
+  
+  border: none;
+  color: black;
+}
+.taskCardArea {
+    padding: 20px 30px;
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+    gap: 20px;
+}
+.taskcard {
+    background: white;
+    
+    color:black;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+.taskcard h2{
+    color: black;
+}
+
+.taskcard nav {
+    display: flex;
+    gap: 10px;
+}
+
+.taskcard button {
+    padding: 8px 12px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+}

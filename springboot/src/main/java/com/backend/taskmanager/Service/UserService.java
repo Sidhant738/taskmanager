@@ -3,8 +3,6 @@ package com.backend.taskmanager.Service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.management.RuntimeErrorException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +17,14 @@ public class UserService {
     public User createUser(User user){
       Optional<User> userExist=userRepository.findByUserEmail(user.getUserEmail());
       if(userExist.isPresent()){
-        throw new RuntimeErrorException(null, "User already exist");
+        throw new RuntimeException("User already exist");
       }
       return userRepository.save(user);
     }
 
     public User findUserById(Long id){
         return userRepository.findById(id)
-                             .orElseThrow(()->new RuntimeErrorException(null,"User Not found"));
+                             .orElseThrow(()->new RuntimeException("User Not found"));
     }
 
     public List<User> findAllUser(){
@@ -46,7 +44,7 @@ public class UserService {
         existingUser.setUserEmail(user.getUserEmail());
         existingUser.setUserName(user.getUserName());
 
-        return userRepository.save(user);
+        return userRepository.save(existingUser);
     }
 
 }
