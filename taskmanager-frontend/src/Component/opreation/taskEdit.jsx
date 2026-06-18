@@ -6,7 +6,10 @@ function EditCard({ task, onSave, onCancel }) {
  const [description,setdescription]=useState(task.description);
     return (
         <div className="editCard">
-            <form className="editCardForm" onSubmit={()=>onSave(title,description)}>
+            <form className="editCardForm" onSubmit={(e)=>{
+                                                         e.preventDefault();                                
+                                                         onSave(title,description);
+                                                         }}>
 
                 <label>Title:</label>
                 <input 
@@ -20,7 +23,7 @@ function EditCard({ task, onSave, onCancel }) {
                 <textarea
                     name="description"
                     value={description}
-                    onChange={(e) => setdescription(e.target.value)}
+                    onChange={(e) => {setdescription(e.target.value)}}
                 />
                <nav>
                 <button  className="navbutton1"

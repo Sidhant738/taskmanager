@@ -89,21 +89,11 @@
 
   background-color: rgb(200, 200, 245);
 
-  border-top-left-radius:30px;
-  border-bottom-left-radius:30px;
+  border-radius:30px;
+ 
   border: none;
 }
-.searchbar button{
-  height:22px;
-  width: 70px;
-  
-  background-color: rgb(76, 76, 82);
-  border-top-right-radius:30px;
-  border-bottom-right-radius:30px;
-  
-  border: none;
-  color: black;
-}
+
 .taskCardArea {
     padding: 20px 30px;
 
@@ -117,12 +107,13 @@
 
 /* Task Card CSS*/
 .taskcard {
-    background: white;
+    background: rgb(235, 234, 234);
     
     color:black;
 
     padding: 20px;
-
+    
+    border: 2px solid transparent;
     border-radius: 15px;
 
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -131,6 +122,13 @@
     flex-direction: column;
 
     gap: 15px;
+
+    transition: transform 0.2s ease;
+
+}
+.taskcard:hover{
+    border-color: #4f46e5;
+    transform: translateY(-3px);
 }
 
 .taskcard h2{
@@ -151,6 +149,22 @@
     border-radius: 8px;
 
     cursor: pointer;
+}
+.b1:hover{
+  background-color: rgb(179, 99, 68);
+  color: black;
+}
+.b2:hover{
+  background-color: rgb(147, 156, 206);
+  color: black;
+}
+.incompleteBtn:hover{
+    background-color: rgb(179, 99, 68);
+    color: black;
+}
+.completeBtn:hover{
+    background-color: rgb(98, 192, 74);
+    color: black;
 }
 
 /*   Empty Card CSS*/
@@ -184,10 +198,11 @@
     color: #666;
     font-weight: 500;
 }
-/*Edit Card CSS*/
+/* Edit Card CSS */
+
 .editCard {
-    height: 700px;
     width: 500px;
+    max-width: 90vw;
 
     background: white;
 
@@ -196,61 +211,87 @@
     border-radius: 15px;
 
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
-.editCardForm{
 
+    box-sizing: border-box;
+}
+
+.editCardForm {
     color: black;
-    
 
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
 
-    gap:15px;
+    gap: 15px;
 }
-.editCardForm input,textarea{
-    width: 450px;
+
+.editCardForm input,
+.editCardForm textarea {
+    width: 100%;
+
     border: none;
-    border-radius: 30px;
+    border-radius: 20px;
 
-    padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 10px 20px;
 
-    background-color:#c5c3c359;
-    color:black
+    background-color: #c5c3c359;
+    color: black;
 
+    box-sizing: border-box;
 }
-.editCardForm textarea{
-    height: 450px;;
 
+.editCardForm textarea {
+    height: 300px;
+
+    resize: none;
+
+    overflow-y: auto;
 }
-.editCardForm nav{
+
+.editCardForm nav {
     width: 300px;
 
     display: flex;
-    align-items: center;
     justify-content: center;
 
     gap: 70px;
 }
 
-.editCardForm button{
+.editCardForm button {
     height: 50px;
     width: 80px;
+
     border: none;
     border-radius: 15px;
-}
-.navbutton1:hover{
-  background-color: rgb(165, 58, 58);
-  color: black;
-}
-.navbutton2:hover{
-  background-color: rgb(79, 165, 58);
-  color: black;
+
+    cursor: pointer;
 }
 
+.navbutton1:hover {
+    background-color: rgb(165, 58, 58);
+    color: black;
+}
+
+.navbutton2:hover {
+    background-color: rgb(79, 165, 58);
+    color: black;
+}
+.editCardForm textarea::-webkit-scrollbar {
+    width: 10px;
+}
+
+.editCardForm textarea::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.editCardForm textarea::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.editCardForm textarea::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
 /* model Over Lay CSS*/
 .modalOverlay {
     position: fixed;
@@ -265,6 +306,41 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
     
+    z-index: 1000;
+    
+}
+
+/* View Card CSS*/
+
+.viewCard{
+    width: 600px;
+    max-width: 90vw;
+
+    background-color: white;
+    color: black;
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    
+}
+.viewCard h2{
+    color: black;
+}
+.viewCard p{
+    margin: 0;
+}
+
+.viewCard button{
+    align-self: flex-end;
 }

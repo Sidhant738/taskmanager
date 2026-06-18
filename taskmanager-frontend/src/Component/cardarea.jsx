@@ -4,15 +4,48 @@ import TaskCard from "./Card/taskcard";
 import EmptyCard from "./Card/emptyCard";
 import EditCard from "./opreation/taskEdit";
 import AddCard from "./opreation/addCard";
+import ViewCard from "./Card/viewCard";
 
 
 function CardArea(){
 
-
 const [showAddForm,setShowAddForm]=useState(false);
 const [showEditForm,setShowEditForm]=useState(false);
-const [tasktable, settasktable] = useState([]);
+const [viewCard,setViewCard]=useState(false);
 const [selectedtask,setSelectedtask]=useState(null);
+const [subString,setsubString]=useState("");
+const [tasktable, settasktable] = useState([
+  {
+    id: 1,
+    title: "Learn React State",
+    description: "Understand how useState updates components.",
+    status: false
+  },
+  {
+    id: 2,
+    title: "Build Task Cards",
+    description: "Create reusable TaskCard components.",
+    status: true
+  },
+  {
+    id: 3,
+    title: "Connect Spring Boot",
+    description: "Send API requests from React to backend.",
+    status: false
+  },
+  {
+    id: 4,
+    title: "Implement Search",
+    description: "Filter tasks by title.",
+    status: false
+  },
+  {
+    id: 5,
+    title: "Learn PostgreSQL",
+    description: "Practice CRUD operations using SQL.",
+    status: true
+  }
+]);
 
 function saveCard(e){
 e.preventDefault();
@@ -38,6 +71,16 @@ function onDelete(id){
    )
   );
 }
+function onStatus(id){
+
+ settasktable(prev=>prev.map(
+  
+  task=>task.id===id?{
+    ...task,status:!task.status
+  }:task
+   )
+  );
+}
 
 function onSave(title,description){
  settasktable(prev=>(prev.map(task=>
@@ -51,6 +94,9 @@ function onSave(title,description){
  setSelectedtask(null);
  setShowEditForm(false);
 }
+
+
+
 
 function findtaskid(id){
  const task=tasktable.find(task=>task.id===id);
@@ -66,6 +112,14 @@ function showEditCard(){
   setShowEditForm(prev=>!prev);
 }
 
+function showViewCard(task){
+  setSelectedtask(task);
+  setViewCard(true);
+}
+
+const filtertable=tasktable.filter(task=>task.title
+                                .toLowerCase()
+                                .includes(subString.toLowerCase()))
 
   return(
   <div className="cardarea">
@@ -76,34 +130,64 @@ function showEditCard(){
 
       <div className="searchbar">
         <input type="text" 
-               placeholder="Search by title"/>
-        
-        <button>Search</button>
-      
+               placeholder="Search by title"
+               value={subString}
+               onChange={(e)=>{
+                setsubString(e.target.value);
+               }}/>
       </div>
 
     </div>
 
     <div className="taskCardArea">
-      <EmptyCard onClick={()=>showAddCard()}/>
+      <EmptyCard onClick={showAddCard}/>
+      
+      {viewCard&&
+       <div className="modalOverlay" onClick={()=>{
+          setViewCard(false);
+          setSelectedtask(null);
+       }}>
+         <div onClick={(e)=>e.stopPropagation()}>
+          <ViewCard 
+                  task={selectedtask}
+                  onClose={()=>{
+                    setViewCard(false);
+                    setSelectedtask(null);
+                 }}
+                  />
+          </div>
+        </div>
+       }
 
-      {showAddForm && <div className="modalOverlay">
+      {showAddForm && 
+      <div className="modalOverlay" onClick={showAddCard}>
+        <div onClick={(e)=>e.stopPropagation()}>
         <AddCard onCancel={showAddCard} onSave={saveCard}/>
-        </div>}
-      {showEditForm && <div className="modalOverlay">
-        <EditCard 
-        task={selectedtask} onSave={onSave}onCancel={showEditCard}
-        />
+         </div>
       </div>}
 
-      
-      {tasktable.map(task=>(
+      {showEditForm &&
+       <div className="modalOverlay" onClick={showEditCard}>
+        <div onClick={(e)=>e.stopPropagation()}>
+          <EditCard 
+                    task={selectedtask} 
+                    onSave={onSave}onCancel={showEditCard}
+         />
+         </div>
+      </div>
+      }
+
+      {filtertable.map(task=>(
         <TaskCard key={task.id} 
                   task={task}  
                   onDelete={onDelete} 
                   onEdit={findtaskid}
+                  status={onStatus}
+                  onClick={()=>showViewCard(task)}
                   />
        ))}
+
+    
     </div>
 
   </div>
