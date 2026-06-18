@@ -60,6 +60,10 @@
 .logo:hover{
     border-color: black;
 }
+
+/*Card Area CSS*/
+
+
 .cardAreaHeader{
     display: flex;
     align-items: center;
@@ -109,6 +113,9 @@
 
     gap: 20px;
 }
+
+
+/* Task Card CSS*/
 .taskcard {
     background: white;
     
@@ -132,6 +139,7 @@
 
 .taskcard nav {
     display: flex;
+    justify-content: center;
     gap: 10px;
 }
 
@@ -143,4 +151,120 @@
     border-radius: 8px;
 
     cursor: pointer;
+}
+
+/*   Empty Card CSS*/
+
+.emptyCard {
+   
+    border: 2px dashed #b0b0b0;
+    border-radius: 15px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.emptyCard:hover {
+    border-color: #4f46e5;
+    transform: translateY(-3px);
+}
+
+.emptyCard h2 {
+    font-size: 3rem;
+    color: #888;
+    margin: 0;
+}
+
+.emptyCard p {
+    color: #666;
+    font-weight: 500;
+}
+/*Edit Card CSS*/
+.editCard {
+    height: 700px;
+    width: 500px;
+
+    background: white;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+.editCardForm{
+
+    color: black;
+    
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap:15px;
+}
+.editCardForm input,textarea{
+    width: 450px;
+    border: none;
+    border-radius: 30px;
+
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    background-color:#c5c3c359;
+    color:black
+
+}
+.editCardForm textarea{
+    height: 450px;;
+
+}
+.editCardForm nav{
+    width: 300px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 70px;
+}
+
+.editCardForm button{
+    height: 50px;
+    width: 80px;
+    border: none;
+    border-radius: 15px;
+}
+.navbutton1:hover{
+  background-color: rgb(165, 58, 58);
+  color: black;
+}
+.navbutton2:hover{
+  background-color: rgb(79, 165, 58);
+  color: black;
+}
+
+/* model Over Lay CSS*/
+.modalOverlay {
+    position: fixed;
+
+    top:0;
+    left:0;
+    width: 100vw;
+    height: 100vh;
+
+    background-color: rgba(228, 222, 222, 0.5);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    
 }
