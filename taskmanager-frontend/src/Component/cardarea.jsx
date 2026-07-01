@@ -14,38 +14,7 @@ const [showEditForm,setShowEditForm]=useState(false);
 const [viewCard,setViewCard]=useState(false);
 const [selectedtask,setSelectedtask]=useState(null);
 const [subString,setsubString]=useState("");
-const [tasktable, settasktable] = useState([
-  {
-    id: 1,
-    title: "Learn React State",
-    description: "Understand how useState updates components.",
-    status: false
-  },
-  {
-    id: 2,
-    title: "Build Task Cards",
-    description: "Create reusable TaskCard components.",
-    status: true
-  },
-  {
-    id: 3,
-    title: "Connect Spring Boot",
-    description: "Send API requests from React to backend.",
-    status: false
-  },
-  {
-    id: 4,
-    title: "Implement Search",
-    description: "Filter tasks by title.",
-    status: false
-  },
-  {
-    id: 5,
-    title: "Learn PostgreSQL",
-    description: "Practice CRUD operations using SQL.",
-    status: true
-  }
-]);
+const [tasktable, settasktable] = useState([]);
 
 function saveCard(e){
 e.preventDefault();
