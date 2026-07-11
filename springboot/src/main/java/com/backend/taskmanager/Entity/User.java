@@ -32,8 +32,4 @@ public class User {
 
     @Column(nullable = false)
     private String passWord;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "user")
-    private List<Task> tasks;
 }

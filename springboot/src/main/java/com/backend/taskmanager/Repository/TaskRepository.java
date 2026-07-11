@@ -8,6 +8,5 @@ import com.backend.taskmanager.Entity.Task;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    List<Task> findAllByUserUserId(Long userId);
-
+    List<Task> findByUserId(Long userId);
 }

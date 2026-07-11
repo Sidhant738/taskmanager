@@ -1,6 +1,9 @@
-import React from "react";
-import "./component.css"
-function Header() {
+import { use } from "react";
+import { useNavigate } from "react-router-dom";
+
+function Header({profile,setting,logout}) {
+
+  const navigate=useNavigate();
     return (
         <header className="header">
           <div className="logo">logo</div>
@@ -11,9 +14,12 @@ function Header() {
            
             <nav className="navbar">
             
-                <button><b>Home</b></button>
                 <button><b>Profile</b></button>
                 <button><b>Setting</b></button>
+                <button onClick={()=>{ 
+                  logout();
+                  navigate("/login");
+                  }}><b>Logout</b></button>
             </nav>
 
           </div>

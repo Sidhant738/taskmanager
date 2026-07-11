@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {useNavigate} from "react-router-dom"
-import {userName,userEmail,userCreate} from "../Service/UserService"
+import {userName,userEmail,userCreate} from "../services/UserService"
 function RegisterForm(){
  
    const navigate=useNavigate();

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.backend.taskmanager.Entity.Task;
 import com.backend.taskmanager.Repository.TaskRepository;
+import com.backend.taskmanager.DTO.Taskdto;
 
 @Service
 public class TaskService {
@@ -14,7 +15,12 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
-    public Task createTask(Task task) {
+    public Task createTask(Taskdto taskDto) {
+        Task task = new Task();
+        task.setTitle(taskDto.getTitle());
+        task.setDescription(taskDto.getDescription());
+        task.setStatus(taskDto.isStatus());
+        task.setUserId(taskDto.getUserId());
         return taskRepository.save(task);
     }
 
@@ -24,7 +30,7 @@ public class TaskService {
     }
 
     public List<Task> findAllTaskByUser(Long userId) {
-        return taskRepository.findAllByUserUserId(userId);
+        return taskRepository.findByUserId(userId);
     }
 
     public void deleteTask(Long id) {

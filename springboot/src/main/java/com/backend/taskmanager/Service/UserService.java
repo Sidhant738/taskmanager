@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.backend.taskmanager.Entity.User;
 import com.backend.taskmanager.Repository.UserRepository;
+import com.backend.taskmanager.DTO.Userdto;
 
 @Service
 public class UserService {
@@ -14,17 +15,41 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User createUser(User user) {
+    public User createUser(Userdto userDto) {
 
-        if (userRepository.existsByUserEmail(user.getUserEmail())) {
+        if (userRepository.existsByUserEmail(userDto.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
 
-        if (userRepository.existsByUserName(user.getUserName())) {
+        if (userRepository.existsByUserName(userDto.getName())) {
             throw new RuntimeException("Username already exists");
         }
 
+        User user = new User();
+        user.setUserName(userDto.getName());
+        user.setUserEmail(userDto.getEmail());
+        user.setPassWord(userDto.getPassword());
+
         return userRepository.save(user);
+    }
+
+    public User login(String identifier, String password) {
+        User user = userRepository.findByUserNameOrUserEmail(identifier, identifier)
+                .orElseThrow(() -> new RuntimeException("Invalid username/email or password"));
+
+        if (!user.getPassWord().equals(password)) {
+            throw new RuntimeException("Invalid username/email or password");
+        }
+
+        return user;
+    }
+
+    public boolean existsByUserName(String userName) {
+        return userRepository.existsByUserName(userName);
+    }
+
+    public boolean existsByUserEmail(String userEmail) {
+        return userRepository.existsByUserEmail(userEmail);
     }
 
     public User findUserById(Long id) {

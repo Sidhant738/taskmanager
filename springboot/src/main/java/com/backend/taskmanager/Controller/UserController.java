@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.backend.taskmanager.Entity.User;
 import com.backend.taskmanager.Service.UserService;
+import com.backend.taskmanager.DTO.Userdto;
+import com.backend.taskmanager.DTO.Logindto;
 
 @RestController
 @RequestMapping("/user")
@@ -17,8 +19,23 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    public User createUser(@RequestBody Userdto user) {
         return userService.createUser(user);
+    }
+
+    @PostMapping("/login")
+    public User loginUser(@RequestBody Logindto loginDto) {
+        return userService.login(loginDto.getIdentifier(), loginDto.getPassword());
+    }
+
+    @GetMapping("/username/{userName}")
+    public boolean checkUserName(@PathVariable String userName) {
+        return userService.existsByUserName(userName);
+    }
+
+    @GetMapping("/useremail/{userEmail}")
+    public boolean checkUserEmail(@PathVariable String userEmail) {
+        return userService.existsByUserEmail(userEmail);
     }
 
     @GetMapping("/{id}")

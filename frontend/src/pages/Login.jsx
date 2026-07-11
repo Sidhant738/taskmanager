@@ -1,15 +1,15 @@
 import {useNavigate} from "react-router-dom"
-import {login} from "../Service/UserService"
+import {login} from "../services/UserService"
 import { useState } from "react";
-function Loginform(){
+function LoginForm(){
 
    const navigate=useNavigate();
 
    const [loading, setLoading] = useState(false);
-   const [loadError,setloadError]=useState("");
+   const [loadError,setLoadError]=useState("");
 
-   const [identifier,setidentifier]=useState("");
-   const [password,setpassword]=useState("");
+   const [identifier,setIdentifier]=useState("");
+   const [password,setPassword]=useState("");
 
    async function handleSubmit(e){
 
@@ -27,7 +27,7 @@ function Loginform(){
 
         }catch (error){
          
-         setloadError(error.message);
+         setLoadError(error.message);
 
          }finally{
          setLoading(false);
@@ -43,7 +43,10 @@ function Loginform(){
                    name="identifier"
                    value={identifier}
                    required
-                   onChange={(e)=>{setidentifier(e.target.value);setLoginError("");}}
+                   disabled={loading}
+                   onChange={(e)=>{setIdentifier(e.target.value);
+                                    setLoadError("");
+                              }}
                    />
 
             Password:
@@ -51,10 +54,13 @@ function Loginform(){
                    name="password"
                    value={password}
                    required
-                   onChange={(e)=>{setpassword(e.target.value)}}
+                   disabled={loading}
+                   onChange={(e)=>{setPassword(e.target.value);
+                                    setLoadError("");
+                              }}
                    />
 
-        <input type="submit" name="submit" value={loading?"loading":"login"} disabled={loading}/>
+        <input type="submit" name="submit" value={loading?"Logging in ...":"Login"} disabled={loading}/>
 
         <button type="button" onClick={()=>navigate("/register") }>Don't have account?</button>
         
@@ -62,4 +68,4 @@ function Loginform(){
     );
 }   
 
-export default Loginform;
+export default LoginForm;
