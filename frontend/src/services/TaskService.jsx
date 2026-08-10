@@ -4,6 +4,7 @@ async function taskCreate(taskInfo){
   const response= await fetch("http://localhost:8080/task/create",{
       method:"POST",
       headers:{
+         "Authorization":`Bearer ${localStorage.getItem("userToken")}`,
          "Content-Type":"application/json"
      },
      body:JSON.stringify(taskInfo)
@@ -17,16 +18,28 @@ async function taskCreate(taskInfo){
 
 async function taskGet(taskId){
  
-  const response= await fetch(`http://localhost:8080/task/${taskId}`);
+  const response= await fetch(`http://localhost:8080/task/${taskId}`,{
+
+     method:"GET",
+      headers:{
+         "Authorization":`Bearer ${localStorage.getItem("userToken")}`,
+         "Content-Type":"application/json"
+     }});
   
   await checkResponse(response,"Failed to get task");
 
   return await response.json();
      
 }
-async function taskGetAll(userId){
+async function taskGetAll(){
  
-  const response= await fetch(`http://localhost:8080/task/user/${userId}`);
+  const response= await fetch(`http://localhost:8080/task/userAllTask`,{
+
+     method:"GET",
+      headers:{
+         "Authorization":`Bearer ${localStorage.getItem("userToken")}`,
+         "Content-Type":"application/json"
+     }});
 
   await checkResponse(response,"Failed to get task list");
 
@@ -37,8 +50,11 @@ async function taskGetAll(userId){
 async function taskDelete(taskId){
  
   const response= await fetch(`http://localhost:8080/task/delete/${taskId}`,{
-    method:"DELETE"
-     });
+    method:"DELETE",
+      headers:{
+         "Authorization":`Bearer ${localStorage.getItem("userToken")}`,
+         "Content-Type":"application/json"
+     }});
 
   await checkResponse(response,"Failed to delete task");
 
@@ -51,6 +67,7 @@ async function taskUpdate(taskInfo){
   const response= await fetch("http://localhost:8080/task/update",{
     method:"PUT",
     headers:{
+        "Authorization":`Bearer ${localStorage.getItem("userToken")}`,
         "Content-Type":"application/json"
     },
      body:JSON.stringify(taskInfo)

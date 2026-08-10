@@ -11,14 +11,18 @@ export default function EditCard({task,onCancel,onSave}){
         setdescription(task.description);
      }},[task]);
 
-    function handleSubmit(e){
-      e.preventDefault();
-      onSave({
-        ...task,
-        title,
-        description,
-      });
+   function handleSubmit(e) {
+     e.preventDefault();
 
+     const taskPayload = task
+      ? { ...task, title, description }
+      : {
+          title,
+          description,
+          status: false
+        };
+
+     onSave(taskPayload);
     }
 
     return(

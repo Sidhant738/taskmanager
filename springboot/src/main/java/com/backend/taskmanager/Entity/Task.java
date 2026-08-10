@@ -1,27 +1,32 @@
 package com.backend.taskmanager.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
-
-@Entity
-@Table(name = "usertask")
 @Getter
 @Setter
-public class Task {
+@Entity
+@Table(name = "tasksData")
+public class Task{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true, nullable = false)
     private Long id;
 
-
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-
+    @Column(nullable = false)
     private String title;
+
+    @Column(length = 1000)
     private String description;
-    private boolean status;
+
+    @Column(nullable = false)
+    private boolean completed;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private User user;
 }

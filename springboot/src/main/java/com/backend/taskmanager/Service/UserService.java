@@ -5,44 +5,45 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.backend.taskmanager.DTO.Registerdto;
+import com.backend.taskmanager.Entity.Role;
 import com.backend.taskmanager.Entity.User;
 import com.backend.taskmanager.Repository.UserRepository;
-import com.backend.taskmanager.DTO.Userdto;
+import com.backend.taskmanager.Service.JwtService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserService {
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private UserRepository userRepository;
 
-    public User createUser(Userdto userDto) {
+    @Autowired
+    private JwtService jwtService;
 
-        if (userRepository.existsByUserEmail(userDto.getEmail())) {
+    public String createUser(Registerdto registerDto) {
+
+        if (userRepository.existsByUserEmail(registerDto.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
 
-        if (userRepository.existsByUserName(userDto.getName())) {
+        if (userRepository.existsByUserName(registerDto.getName())) {
             throw new RuntimeException("Username already exists");
         }
 
         User user = new User();
-        user.setUserName(userDto.getName());
-        user.setUserEmail(userDto.getEmail());
-        user.setPassWord(userDto.getPassword());
+        user.setUserName(registerDto.getName());
+        user.setUserEmail(registerDto.getEmail());
+        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        user.setRole(Role.USER);
+        userRepository.save(user);
 
-        return userRepository.save(user);
+        return jwtService.generateToken(registerDto.getName());
     }
 
-    public User login(String identifier, String password) {
-        User user = userRepository.findByUserNameOrUserEmail(identifier, identifier)
-                .orElseThrow(() -> new RuntimeException("Invalid username/email or password"));
-
-        if (!user.getPassWord().equals(password)) {
-            throw new RuntimeException("Invalid username/email or password");
-        }
-
-        return user;
-    }
 
     public boolean existsByUserName(String userName) {
         return userRepository.existsByUserName(userName);
@@ -78,5 +79,5 @@ public class UserService {
 
         return userRepository.save(existingUser);
     }
+   
 }
-

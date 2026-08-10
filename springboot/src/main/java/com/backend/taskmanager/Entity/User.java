@@ -1,35 +1,48 @@
 package com.backend.taskmanager.Entity;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-@Entity
-@Table(name = "usertable")
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 @Getter
 @Setter
-public class User {
+@Entity
+@Table(name = "userData")
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true, nullable = false)
     private Long userId;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String userName;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String userEmail;
 
     @Column(nullable = false)
-    private String passWord;
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @OneToMany(
+        mappedBy = "user",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    @JsonManagedReference
+    private List<Task> tasks = new ArrayList<>();
 }

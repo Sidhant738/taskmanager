@@ -27,7 +27,7 @@ export default function Dashboard(){
       const statusUpdate=taskTable.find(task=>task.id===taskId);
 
       if(statusUpdate)
-      editTask({...statusUpdate,status:!statusUpdate.status});
+      editTask({...statusUpdate, completed: !statusUpdate.completed});
     }
     return(
     <>

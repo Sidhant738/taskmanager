@@ -1,6 +1,7 @@
 package com.backend.taskmanager.Repository;
-import com.backend.taskmanager.Entity.User;
 
+import com.backend.taskmanager.Entity.User;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +12,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUserName(String userName);
 
-    java.util.Optional<User> findByUserNameOrUserEmail(String userName, String userEmail);
+    Optional<User> findByUserNameOrUserEmail(String userName, String userEmail);
+
+    Optional<User> findByUserName(String userName);
+
 }

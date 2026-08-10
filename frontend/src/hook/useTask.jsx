@@ -12,12 +12,10 @@ export default function useTask(){
 
     async function loadTask(){
         try{
-          const userRaw = localStorage.getItem("user");
-          if (userRaw) {
-              const user = JSON.parse(userRaw);
-              const response = await taskGetAll(user.userId);
+          
+              const response = await taskGetAll();
               setTaskTable(response);
-          }
+          
         }catch(error){
            console.log(error.message);
         }
@@ -28,17 +26,11 @@ export default function useTask(){
     async function addTask(task){
   
         try{
-            const userRaw = localStorage.getItem("user");
-              if (userRaw) {
-                 const user=JSON.parse(userRaw);
-                 const response=await taskCreate({
-                     ...task,
-                     userId: user.userId
-                 });
-                 setTaskTable(pre=>[
+              const response=await taskCreate(task);
+              setTaskTable(pre=>[
                      ...pre,response
                  ]);
-                }
+    
         }catch(error){
             console.log(error.message)
         }
@@ -86,7 +78,7 @@ export default function useTask(){
   
     }
     function logout(){
-        localStorage.removeItem("user");
+        localStorage.removeItem("userToken");
     }
     return {
        taskTable,

@@ -6,10 +6,10 @@ function Home(){
     
    
     return(
-      <>
+      <div  className="home-page">
       <button onClick={()=>navigate("/register")}>register</button>
       <button onClick={()=>navigate("/login")}>login</button>
-      </>
+      </div>
     );
 }   
 

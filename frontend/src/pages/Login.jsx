@@ -1,5 +1,5 @@
 import {useNavigate} from "react-router-dom"
-import {login} from "../services/UserService"
+import {login} from "../services/AuthService"
 import { useState } from "react";
 function LoginForm(){
 
@@ -8,7 +8,7 @@ function LoginForm(){
    const [loading, setLoading] = useState(false);
    const [loadError,setLoadError]=useState("");
 
-   const [identifier,setIdentifier]=useState("");
+   const [username,setIdentifier]=useState("");
    const [password,setPassword]=useState("");
 
    async function handleSubmit(e){
@@ -17,12 +17,12 @@ function LoginForm(){
         setLoading(true);
         try{
 
-              const user=await login({
-               identifier,
+              const token=await login({
+               username,
                password
                });
               
-               localStorage.setItem("user",JSON.stringify(user));
+               localStorage.setItem("userToken",token);
               navigate("/dashboard",{replace:true});
 
         }catch (error){
@@ -38,10 +38,10 @@ function LoginForm(){
     return(
      <form onSubmit={handleSubmit}>
             <p>{loadError}</p>
-            UserNameOrEmail:
+            UserName:
             <input type="text"
-                   name="identifier"
-                   value={identifier}
+                   name="username"
+                   value={username}
                    required
                    disabled={loading}
                    onChange={(e)=>{setIdentifier(e.target.value);

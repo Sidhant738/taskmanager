@@ -9,5 +9,4 @@ public class Taskdto {
     private String title;
     private String description;
     private boolean status;
-    private Long userId;
 }

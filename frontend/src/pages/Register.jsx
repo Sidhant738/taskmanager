@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {useNavigate} from "react-router-dom"
-import {userName,userEmail,userCreate} from "../services/UserService"
+import { userName, userEmail } from "../services/UserService"
+import { register } from "../services/AuthService"
 function RegisterForm(){
  
    const navigate=useNavigate();
@@ -60,13 +61,13 @@ function RegisterForm(){
        setloading(true);
 
         try{
-              const user=await userCreate({
+              const user=await register({
                name,
                email,
                password
                });
             
-               localStorage.setItem("user",JSON.stringify(user));
+               localStorage.setItem("userToken",user);
 
                navigate("/dashboard",{replace:true});
         }catch (error){

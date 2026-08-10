@@ -29,7 +29,7 @@ export default function CardArea({tasktable,settasktable,add,ondelete,get,edit,o
           task={task}
           onDelete={ondelete}
           onEdit={edit}
-          status={task.status}
+          status={task.completed}
           onState={onState}
            />
          )}

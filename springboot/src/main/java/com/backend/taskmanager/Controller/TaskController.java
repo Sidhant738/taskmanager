@@ -27,9 +27,9 @@ public class TaskController {
         return taskService.findTaskById(id);
     }
 
-    @GetMapping("/user/{userId}")
-    public List<Task> getAllTaskByUser(@PathVariable Long userId) {
-        return taskService.findAllTaskByUser(userId);
+    @GetMapping("/userAllTask")
+    public List<Task> getAllTaskByUser() {
+        return taskService.findAllTaskByUser();
     }
 
     @DeleteMapping("/delete/{id}")
