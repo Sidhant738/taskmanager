@@ -1,18 +1,23 @@
 import CardContainer from "./CardContainer";
+import "../../styles/cards/viewcard.css";
 
-export default function ViewCard({task,onClose}){
+export default function ViewCard({ task, onClose }) {
 
-    if(!task)return null;
+    if (!task) return null;
 
-    return(
-        <CardContainer>
+    return (
 
-         <h2>{task.title}</h2>
+        <CardContainer className="View">
 
-         <p>{task.description}</p>
+            <h2>{task.title}</h2>
 
-         <button onClick={onClose}>Close</button>
+            <p>{task.description}</p>
+
+            <button onClick={onClose}>
+                Close
+            </button>
 
         </CardContainer>
+
     );
 }

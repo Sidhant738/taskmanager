@@ -1,4 +1,6 @@
 
+import { checkResponse } from "./apiHelper";
+
 async function userGet(userId){
  
   const response= await fetch(`http://localhost:8080/user/${userId}`,{
@@ -13,6 +15,19 @@ async function userGet(userId){
 
   return await response.json();
      
+}
+
+async function currentUser(){
+  const response = await fetch("http://localhost:8080/user/me", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("userToken")}`,
+      "Content-Type": "application/json"
+    }
+  });
+
+  await checkResponse(response, "Failed to load current user");
+  return await response.json();
 }
 async function userName(userName){
  
@@ -81,26 +96,27 @@ async function userUpdate(userInfo){
      
 }
 
-async function checkResponse(response, defaultMessage) {
-    if (!response.ok) {
-        let message = defaultMessage;
+async function userChangePassword(userId, newPassword) {
+  const response = await fetch("http://localhost:8080/user/change-password", {
+    method: "PUT",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("userToken")}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ userId, newPassword })
+  });
 
-        try {
-            const error = await response.json();
-            message = error.message || defaultMessage;
-        } catch {
-            message = await response.text() || defaultMessage;
-        }
-
-        throw new Error(message);
-    }
+  await checkResponse(response, "Failed to change password");
+  return await response.json();
 }
 
 export {
   userDelete,
   userGet,
+  currentUser,
   userName,
   userEmail,
   userUpdate,
+  userChangePassword,
   userGetAll
 };

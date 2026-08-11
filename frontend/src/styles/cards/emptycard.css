@@ -1,0 +1,23 @@
+.Empty{
+
+    min-height:220px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:70px;
+
+    color:#4F46E5;
+
+    cursor:pointer;
+
+    border:3px dashed #4F46E5;
+}
+
+.Empty:hover{
+
+    background:#EEF2FF;
+}

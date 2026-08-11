@@ -1,6 +1,8 @@
 package com.backend.taskmanager.Repository;
 
 import com.backend.taskmanager.Entity.User;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,5 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserNameOrUserEmail(String userName, String userEmail);
 
     Optional<User> findByUserName(String userName);
+
+    List<User> findByScheduledForDeletionTrueAndDeletionScheduledAtBefore(LocalDateTime dateTime);
 
 }

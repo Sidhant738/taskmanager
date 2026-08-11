@@ -5,8 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.backend.taskmanager.DTO.PasswordChangeDto;
 import com.backend.taskmanager.Entity.User;
+import com.backend.taskmanager.Service.JwtService;
 import com.backend.taskmanager.Service.UserService;
+import com.backend.taskmanager.exception.BadRequestException;
 
 @RestController
 @RequestMapping("/user")
@@ -16,7 +19,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-   
+    @Autowired
+    private JwtService jwtService;
 
     @GetMapping("/username/{userName}")
     public boolean checkUserName(@PathVariable String userName) {
@@ -33,6 +37,13 @@ public class UserController {
         return userService.findUserById(id);
     }
 
+    @GetMapping("/me")
+    public User getCurrentUser(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String username = jwtService.extractUsername(token);
+        return userService.findUserByUsername(username);
+    }
+
     @GetMapping("/getall")
     public List<User> getAllUser() {
         return userService.findAllUser();
@@ -46,6 +57,20 @@ public class UserController {
     @PutMapping("/update")
     public User updateUser(@RequestBody User user) {
         return userService.updateUser(user);
+    }
+
+    @PutMapping("/change-password")
+    public User changePassword(@RequestHeader("Authorization") String authorizationHeader,
+                               @RequestBody PasswordChangeDto passwordChangeDto) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        String username = jwtService.extractUsername(token);
+        User loggedInUser = userService.findUserByUsername(username);
+
+        if (!loggedInUser.getUserId().equals(passwordChangeDto.getUserId())) {
+            throw new BadRequestException("Invalid user for password change");
+        }
+
+        return userService.changePassword(passwordChangeDto.getUserId(), passwordChangeDto.getNewPassword());
     }
 
     @GetMapping("/test")

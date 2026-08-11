@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {useNavigate} from "react-router-dom"
 import { userName, userEmail } from "../services/UserService"
 import { register } from "../services/AuthService"
+import "../styles/page/register.css"
 function RegisterForm(){
  
    const navigate=useNavigate();
@@ -61,13 +62,13 @@ function RegisterForm(){
        setloading(true);
 
         try{
-              const user=await register({
+              const Token=await register({
                name,
                email,
                password
                });
             
-               localStorage.setItem("userToken",user);
+               localStorage.setItem("userToken",Token);
 
                navigate("/dashboard",{replace:true});
         }catch (error){
@@ -112,41 +113,69 @@ function RegisterForm(){
    }
 
     return(
-     <form onSubmit={handleSubmit}>
-            <p>{loadError}</p>
-            Name:
-            <input type="text"
-                   name="userName"
-                   value={name}
-                   onChange={(e)=>{
-                     setname(e.target.value);
-                    setUserNameError("");
-                     }}
-                     required
-                   />
-                   <p>{userNameError}</p>
-            Email:
-            <input type="email"
-                   name="userEmail"
-                   value={email}
-                   onChange={(e)=>{
-                     setemail(e.target.value);
-                     setUserEmailError("");
-                    }}
-                    required
-                   />
-                   <p>{userEmailError}</p>
-            Password:
-            <input type="password" 
-                   name="password"
-                   value={password}
-                   minLength={8}
-                   onChange={(e)=>setpassword(e.target.value)}
-                   required
-                   />
-        <input type="submit" name="submit" value={loading?"loading":"register"} disabled={loading}/>
-        <button type="button" onClick={()=>navigate("/login")}>Already have a account?</button>
-     </form>
+<form className="register-form" onSubmit={handleSubmit}>
+
+    <h1>Create Account</h1>
+
+    <p className="error">{loadError}</p>
+
+    <label>Name</label>
+
+    <input
+        type="text"
+        name="userName"
+        value={name}
+        onChange={(e)=>{
+            setname(e.target.value);
+            setUserNameError("");
+        }}
+        required
+    />
+
+    <p className="field-error">{userNameError}</p>
+
+    <label>Email</label>
+
+    <input
+        type="email"
+        name="userEmail"
+        value={email}
+        onChange={(e)=>{
+            setemail(e.target.value);
+            setUserEmailError("");
+        }}
+        required
+    />
+
+    <p className="field-error">{userEmailError}</p>
+
+    <label>Password</label>
+
+    <input
+        type="password"
+        name="password"
+        value={password}
+        minLength={8}
+        onChange={(e)=>setpassword(e.target.value)}
+        required
+    />
+
+    <input
+        className="register-submit"
+        type="submit"
+        value={loading ? "Creating Account..." : "Register"}
+        disabled={loading}
+    />
+
+    <button
+        className="login-link"
+        type="button"
+        onClick={()=>navigate("/login")}
+    >
+        Already have an account?
+    </button>
+
+</form>
     );
 }   
 

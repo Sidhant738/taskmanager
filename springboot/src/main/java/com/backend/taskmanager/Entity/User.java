@@ -38,6 +38,10 @@ public class User{
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    private Boolean scheduledForDeletion = false;
+
+    private LocalDateTime deletionScheduledAt;
+
     @OneToMany(
         mappedBy = "user",
         cascade = CascadeType.ALL,

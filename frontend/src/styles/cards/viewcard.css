@@ -1,0 +1,14 @@
+.View{
+
+    width:450px;
+
+    max-width:95vw;
+
+    max-height:80vh;
+
+    overflow:auto;
+
+    overflow-wrap:break-word;
+
+    word-break:break-word;
+}

@@ -1,4 +1,5 @@
 import {useNavigate} from "react-router-dom"
+import "../styles/page/login.css";
 import {login} from "../services/AuthService"
 import { useState } from "react";
 function LoginForm(){
@@ -7,8 +8,9 @@ function LoginForm(){
 
    const [loading, setLoading] = useState(false);
    const [loadError,setLoadError]=useState("");
+   const [loginMode, setLoginMode] = useState("username");
 
-   const [username,setIdentifier]=useState("");
+   const [identifier,setIdentifier]=useState("");
    const [password,setPassword]=useState("");
 
    async function handleSubmit(e){
@@ -18,7 +20,7 @@ function LoginForm(){
         try{
 
               const token=await login({
-               username,
+               username: identifier,
                password
                });
               
@@ -36,35 +38,78 @@ function LoginForm(){
 
 
     return(
-     <form onSubmit={handleSubmit}>
-            <p>{loadError}</p>
-            UserName:
-            <input type="text"
-                   name="username"
-                   value={username}
-                   required
-                   disabled={loading}
-                   onChange={(e)=>{setIdentifier(e.target.value);
-                                    setLoadError("");
-                              }}
-                   />
+ <form className="login-form" onSubmit={handleSubmit}>
 
-            Password:
-            <input type="password" 
-                   name="password"
-                   value={password}
-                   required
-                   disabled={loading}
-                   onChange={(e)=>{setPassword(e.target.value);
-                                    setLoadError("");
-                              }}
-                   />
+    <h1>Login</h1>
 
-        <input type="submit" name="submit" value={loading?"Logging in ...":"Login"} disabled={loading}/>
+    <p className="error">{loadError}</p>
 
-        <button type="button" onClick={()=>navigate("/register") }>Don't have account?</button>
-        
-     </form>
+    <div className="login-mode">
+        <label>
+            <input
+                type="radio"
+                name="loginMode"
+                value="username"
+                checked={loginMode === "username"}
+                onChange={() => setLoginMode("username")}
+            />
+            Username
+        </label>
+        <label>
+            <input
+                type="radio"
+                name="loginMode"
+                value="email"
+                checked={loginMode === "email"}
+                onChange={() => setLoginMode("email")}
+            />
+            Email
+        </label>
+    </div>
+
+    <label>{loginMode === "username" ? "Username" : "Email"}</label>
+    <input
+        type="text"
+        name="identifier"
+        placeholder={loginMode === "username" ? "Enter your username" : "Enter your email"}
+        value={identifier}
+        required
+        disabled={loading}
+        onChange={(e)=>{
+            setIdentifier(e.target.value);
+            setLoadError("");
+        }}
+    />
+
+    <label>Password</label>
+    <input
+        type="password"
+        name="password"
+        value={password}
+        required
+        disabled={loading}
+        onChange={(e)=>{
+            setPassword(e.target.value);
+            setLoadError("");
+        }}
+    />
+
+    <input
+        className="login-btn"
+        type="submit"
+        value={loading ? "Logging in..." : "Login"}
+        disabled={loading}
+    />
+
+    <button
+        className="register-btn"
+        type="button"
+        onClick={()=>navigate("/register")}
+    >
+        Don't have an account?
+    </button>
+
+</form>
     );
 }   
 

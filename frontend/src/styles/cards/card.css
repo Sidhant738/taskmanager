@@ -1,0 +1,22 @@
+.Card{
+
+    width:100%;
+
+    min-height:250px;
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    
+
+    transition:.3s;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+}

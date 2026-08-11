@@ -12,6 +12,7 @@ import com.backend.taskmanager.Entity.Task;
 import com.backend.taskmanager.Entity.User;
 import com.backend.taskmanager.Repository.TaskRepository;
 import com.backend.taskmanager.Repository.UserRepository;
+import com.backend.taskmanager.exception.ResourceNotFoundException;
 
 @Service
 public class TaskService {
@@ -32,7 +33,7 @@ public class TaskService {
 
     public Task findTaskById(Long id) {
         return taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
     }
 
     public List<Task> findAllTaskByUser() {
@@ -43,7 +44,7 @@ public class TaskService {
 
     public void deleteTask(Long id) {
         if (!taskRepository.existsById(id)) {
-            throw new RuntimeException("Task not found");
+            throw new ResourceNotFoundException("Task not found");
         }
 
         taskRepository.deleteById(id);
@@ -64,6 +65,6 @@ public class TaskService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         return userRepository.findByUserName(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 }

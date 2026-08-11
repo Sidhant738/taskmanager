@@ -1,4 +1,6 @@
 
+import { checkResponse } from "./apiHelper";
+
 async function taskCreate(taskInfo){
  
   const response= await fetch("http://localhost:8080/task/create",{
@@ -79,20 +81,6 @@ async function taskUpdate(taskInfo){
      
 }
 
-async function checkResponse(response, defaultMessage) {
-    if (!response.ok) {
-        let message = defaultMessage;
-
-        try {
-            const error = await response.json();
-            message = error.message || defaultMessage;
-        } catch {
-            message = await response.text() || defaultMessage;
-        }
-
-        throw new Error(message);
-    }
-}
 export {
     taskCreate,
     taskGet,

@@ -1,28 +1,65 @@
-import { use } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../../styles/header/header.css";
 
-function Header({profile,setting,logout}) {
+function Header({ profile, setting, logout }) {
+    const navigate = useNavigate();
+    const [menuOpen, setMenuOpen] = useState(false);
 
-  const navigate=useNavigate();
     return (
         <header className="header">
-          <div className="logo">logo</div>
 
-          <div className="insideheader">
-            
-            <h2><b>Task Management</b></h2>
-           
-            <nav className="navbar">
-            
-                <button><b>Profile</b></button>
-                <button><b>Setting</b></button>
-                <button onClick={()=>{ 
-                  logout();
-                  navigate("/login");
-                  }}><b>Logout</b></button>
+            <div className="logo">
+                <h2>TaskFlow</h2>
+            </div>
+
+            <button
+                className="menu-btn"
+                onClick={() => setMenuOpen(!menuOpen)}
+            >
+                ☰
+            </button>
+
+            <nav className={`navbar ${menuOpen ? "active" : ""}`}>
+
+                <button
+                    onClick={() => {
+                        setMenuOpen(false);
+                    }}
+                >
+                    Dashboard
+                </button>
+
+                <button
+                    onClick={() => {
+                        navigate("/profile");
+                        setMenuOpen(false);
+                    }}
+                >
+                    Profile
+                </button>
+
+                <button
+                    onClick={() => {
+                        navigate("/settings");
+                        setMenuOpen(false);
+                    }}
+                >
+                    Settings
+                </button>
+
+                <button
+                    className="logout-btn"
+                    onClick={() => {
+                        logout();
+                        navigate("/login");
+                    }}
+                >
+                    Logout
+                </button>
+
             </nav>
 
-          </div>
         </header>
     );
 }

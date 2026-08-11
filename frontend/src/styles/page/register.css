@@ -1,0 +1,161 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f7f9fc;
+}
+
+.register-form{
+
+    width:430px;
+    margin:50px auto;
+
+    background:#fff;
+
+    padding:40px;
+
+    border-radius:20px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.12);
+
+    display:flex;
+    flex-direction:column;
+}
+
+.register-form h1{
+
+    text-align:center;
+
+    color:#2d2b72;
+
+    margin-bottom:25px;
+}
+
+.register-form label{
+
+    margin-top:15px;
+
+    margin-bottom:8px;
+
+    color:#444;
+
+    font-weight:600;
+}
+
+.register-form input[type="text"],
+.register-form input[type="email"],
+.register-form input[type="password"]{
+
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    outline:none;
+
+    transition:.3s;
+
+    font-size:15px;
+}
+
+.register-form input[type="text"]:focus,
+.register-form input[type="email"]:focus,
+.register-form input[type="password"]:focus{
+
+    border-color:#6c63ff;
+
+    box-shadow:0 0 8px rgba(108,99,255,.25);
+}
+
+.register-submit{
+
+    margin-top:30px;
+
+    padding:14px;
+
+    background:#ff4d8d;
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.register-submit:hover{
+
+    background:#e63d7b;
+}
+
+.register-submit:disabled{
+
+    background:#999;
+
+    cursor:not-allowed;
+}
+
+.login-link{
+
+    margin-top:18px;
+
+    border:none;
+
+    background:none;
+
+    color:#6c63ff;
+
+    cursor:pointer;
+
+    font-size:15px;
+}
+
+.login-link:hover{
+
+    text-decoration:underline;
+}
+
+.error{
+
+    color:#e63946;
+
+    text-align:center;
+
+    min-height:20px;
+
+    margin-bottom:15px;
+}
+
+.field-error{
+
+    color:#e63946;
+
+    font-size:14px;
+
+    min-height:18px;
+
+    margin-top:5px;
+}
+
+@media(max-width:500px){
+
+    .register-form{
+
+        width:90%;
+
+        padding:25px;
+    }
+
+}

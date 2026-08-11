@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import CardContainer from "./CardContainer";
+import "../../styles/cards/editcard.css"
+
 
 export default function EditCard({task,onCancel,onSave}){
     const [title,settitle]=useState("");
@@ -35,7 +37,8 @@ export default function EditCard({task,onCancel,onSave}){
             />
 
             Description:
-            <input
+            <textarea
+             rows="5"
              value={description}
              onChange={(e)=>setdescription(e.target.value)}
             />
