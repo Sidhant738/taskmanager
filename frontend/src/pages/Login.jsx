@@ -1,116 +1,105 @@
-import {useNavigate} from "react-router-dom"
-import "../styles/page/login.css";
-import {login} from "../services/AuthService"
 import { useState } from "react";
-function LoginForm(){
+import { useNavigate } from "react-router-dom";
+import { login } from "../services/AuthService";
+import "../styles/page/login.css";
 
-   const navigate=useNavigate();
+export default function LoginForm() {
+    const navigate = useNavigate();
 
-   const [loading, setLoading] = useState(false);
-   const [loadError,setLoadError]=useState("");
-   const [loginMode, setLoginMode] = useState("username");
+    const [identifier, setIdentifier] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [loadError, setLoadError] = useState("");
 
-   const [identifier,setIdentifier]=useState("");
-   const [password,setPassword]=useState("");
+    async function handleSubmit(event) {
+        event.preventDefault();
 
-   async function handleSubmit(e){
-
-         e.preventDefault();
         setLoading(true);
-        try{
+        setLoadError("");
 
-              const token=await login({
-               username: identifier,
-               password
-               });
-              
-               localStorage.setItem("userToken",token);
-              navigate("/dashboard",{replace:true});
+        try {
+            const token = await login({
+                identifier: identifier.trim(),
+                password
+            });
 
-        }catch (error){
-         
-         setLoadError(error.message);
+            localStorage.setItem("userToken", token);
+            navigate("/dashboard", {
+                replace: true
+            });
+        } catch (error) {
+            setLoadError(
+                error.message || "Login failed."
+            );
+        } finally {
+            setLoading(false);
+        }
+    }
 
-         }finally{
-         setLoading(false);
-         }
-   }
+    return (
+        <form
+            className="login-form"
+            onSubmit={handleSubmit}
+        >
+            <h1>Login</h1>
 
+            {loadError && (
+                <p className="error">{loadError}</p>
+            )}
 
-    return(
- <form className="login-form" onSubmit={handleSubmit}>
+            <label htmlFor="identifier">
+                Username/Email
+            </label>
 
-    <h1>Login</h1>
-
-    <p className="error">{loadError}</p>
-
-    <div className="login-mode">
-        <label>
             <input
-                type="radio"
-                name="loginMode"
-                value="username"
-                checked={loginMode === "username"}
-                onChange={() => setLoginMode("username")}
+                id="identifier"
+                type="text"
+                name="identifier"
+                value={identifier}
+                onChange={(event) => {
+                    setIdentifier(event.target.value);
+                    setLoadError("");
+                }}
+                required
+                disabled={loading}
             />
-            Username
-        </label>
-        <label>
+
+            <label htmlFor="login-password">
+                Password
+            </label>
+
             <input
-                type="radio"
-                name="loginMode"
-                value="email"
-                checked={loginMode === "email"}
-                onChange={() => setLoginMode("email")}
+                id="login-password"
+                type="password"
+                name="password"
+                value={password}
+                onChange={(event) => {
+                    setPassword(event.target.value);
+                    setLoadError("");
+                }}
+                required
+                disabled={loading}
             />
-            Email
-        </label>
-    </div>
 
-    <label>{loginMode === "username" ? "Username" : "Email"}</label>
-    <input
-        type="text"
-        name="identifier"
-        placeholder={loginMode === "username" ? "Enter your username" : "Enter your email"}
-        value={identifier}
-        required
-        disabled={loading}
-        onChange={(e)=>{
-            setIdentifier(e.target.value);
-            setLoadError("");
-        }}
-    />
+            <input
+                className="login-btn"
+                type="submit"
+                value={
+                    loading
+                        ? "Logging in..."
+                        : "Login"
+                }
+                disabled={loading}
+            />
 
-    <label>Password</label>
-    <input
-        type="password"
-        name="password"
-        value={password}
-        required
-        disabled={loading}
-        onChange={(e)=>{
-            setPassword(e.target.value);
-            setLoadError("");
-        }}
-    />
-
-    <input
-        className="login-btn"
-        type="submit"
-        value={loading ? "Logging in..." : "Login"}
-        disabled={loading}
-    />
-
-    <button
-        className="register-btn"
-        type="button"
-        onClick={()=>navigate("/register")}
-    >
-        Don't have an account?
-    </button>
-
-</form>
+            <button
+                className="register-btn"
+                type="button"
+                onClick={() => navigate("/register")}
+                disabled={loading}
+            >
+                Don't have an account?
+            </button>
+        </form>
     );
-}   
-
-export default LoginForm;
+}

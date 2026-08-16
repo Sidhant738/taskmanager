@@ -1,54 +1,82 @@
 import { useEffect, useState } from "react";
 import CardContainer from "./CardContainer";
-import "../../styles/cards/editcard.css"
+import "../../styles/cards/editcard.css";
 
+export default function EditCard({
+    task,
+    onCancel,
+    onSave
+}) {
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
 
-export default function EditCard({task,onCancel,onSave}){
-    const [title,settitle]=useState("");
-    const [description,setdescription]=useState("");
+    useEffect(() => {
+        setTitle(task?.title ?? "");
+        setDescription(task?.description ?? "");
+    }, [task]);
 
-    useEffect(()=>{
-         if(task){
-        settitle(task.title);
-        setdescription(task.description);
-     }},[task]);
+    function handleSubmit(event) {
+        event.preventDefault();
 
-   function handleSubmit(e) {
-     e.preventDefault();
+        const cleanTitle = title.trim();
+        const cleanDescription = description.trim();
 
-     const taskPayload = task
-      ? { ...task, title, description }
-      : {
-          title,
-          description,
-          status: false
-        };
+        if (!cleanTitle || !cleanDescription) {
+            return;
+        }
 
-     onSave(taskPayload);
+        onSave({
+            title: cleanTitle,
+            description: cleanDescription
+        });
     }
 
-    return(
+    return (
         <CardContainer className="Edit">
-         <form onSubmit={handleSubmit}>
-            Title:
-            <input
-             value={title}
-             onChange={(e)=>settitle(e.target.value)}
-            />
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="task-title">
+                    Title
+                </label>
 
-            Description:
-            <textarea
-             rows="5"
-             value={description}
-             onChange={(e)=>setdescription(e.target.value)}
-            />
+                <input
+                    id="task-title"
+                    type="text"
+                    value={title}
+                    onChange={(event) =>
+                        setTitle(event.target.value)
+                    }
+                    maxLength={255}
+                    required
+                />
 
-            <nav>
-                <button type="button"onClick={onCancel}>Close</button>
-                <button type="submit">Save</button>
-            </nav>
+                <label htmlFor="task-description">
+                    Description
+                </label>
 
-         </form>
+                <textarea
+                    id="task-description"
+                    rows="5"
+                    value={description}
+                    onChange={(event) =>
+                        setDescription(event.target.value)
+                    }
+                    maxLength={1000}
+                    required
+                />
+
+                <nav>
+                    <button
+                        type="button"
+                        onClick={onCancel}
+                    >
+                        Cancel
+                    </button>
+
+                    <button type="submit">
+                        Save
+                    </button>
+                </nav>
+            </form>
         </CardContainer>
     );
 }

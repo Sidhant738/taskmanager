@@ -1,31 +1,33 @@
 import { checkResponse } from "./apiHelper";
 
-async function register(userInfo) {
-  const response = await fetch("http://localhost:8080/auth/register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(userInfo)
-  });
+const BASE_URL = "http://localhost:8080";
 
-  await checkResponse(response, "Failed to register");
+async function register(registerData) {
+    const response = await fetch(`${BASE_URL}/auth/register`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(registerData)
+    });
 
-  return await response.text();
+    await checkResponse(response, "Failed to register");
+    return response.text();
 }
 
 async function login(loginData) {
-  const response = await fetch("http://localhost:8080/auth/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(loginData)
-  });
+    const response = await fetch(`${BASE_URL}/auth/login`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(loginData)
+    });
 
-  await checkResponse(response, "Login failed");
-
-  return await response.text();
+    await checkResponse(response, "Login failed");
+    return response.text();
 }
 
 export { register, login };

@@ -1,122 +1,79 @@
-
+import { apiFetch } from "../security/apifetch";
 import { checkResponse } from "./apiHelper";
 
-async function userGet(userId){
- 
-  const response= await fetch(`http://localhost:8080/user/${userId}`,{
+const BASE_URL = "http://localhost:8080";
 
-     method:"GET",
-      headers:{
-         "Authorization":`Bearer ${localStorage.getItem("userToken")}`,
-         "Content-Type":"application/json"
-     }});
-  
-  await checkResponse(response,"Failed to get User");
+async function currentUser() {
+    const response = await apiFetch("/user/me", {
+        method: "GET"
+    });
 
-  return await response.json();
-     
+    await checkResponse(response, "Failed to load current user");
+    return response.json();
 }
 
-async function currentUser(){
-  const response = await fetch("http://localhost:8080/user/me", {
-    method: "GET",
-    headers: {
-      "Authorization": `Bearer ${localStorage.getItem("userToken")}`,
-      "Content-Type": "application/json"
-    }
-  });
+async function userName(username) {
+    const response = await fetch(
+        `${BASE_URL}/user/username/${encodeURIComponent(username)}`
+    );
 
-  await checkResponse(response, "Failed to load current user");
-  return await response.json();
-}
-async function userName(userName){
- 
-  const response= await fetch(`http://localhost:8080/user/username/${userName}`);
-     
-  await checkResponse(response,"User name not found");
-
-  return await response.json();
-     
-}
-async function userEmail(userEmail){
- 
-  const response= await fetch(`http://localhost:8080/user/useremail/${userEmail}`);
-
-  await checkResponse(response,"User email not found");
-
-  return await response.json();
-     
+    await checkResponse(response, "Failed to check username");
+    return response.json();
 }
 
+async function userEmail(email) {
+    const response = await fetch(
+        `${BASE_URL}/user/useremail/${encodeURIComponent(email)}`
+    );
 
-async function userGetAll(){
- 
-  const response= await fetch(`http://localhost:8080/user/getall`,{
-
-     method:"GET",
-      headers:{
-         "Authorization":`Bearer ${localStorage.getItem("userToken")}`,
-         "Content-Type":"application/json"
-     }});
-  
-  await checkResponse(response,"User list not found");
-  
-  return await response.json();
-     
-}
-async function userDelete(userId){
- 
-  const response= await fetch(`http://localhost:8080/user/delete/${userId}`,{
-    method:"DELETE",
-    headers:{
-         "Authorization":`Bearer ${localStorage.getItem("userToken")}`,
-         "Content-Type":"application/json"
-     }});
-
-  await checkResponse(response,"Failed to delete user");
-
-  return await response.text();
-     
+    await checkResponse(response, "Failed to check email");
+    return response.json();
 }
 
-async function userUpdate(userInfo){
- 
-  const response= await fetch("http://localhost:8080/user/update",{
-    method:"PUT",
-    headers:{
-        "Authorization":`Bearer ${localStorage.getItem("userToken")}`,
-        "Content-Type":"application/json"
-    },
-     body:JSON.stringify(userInfo)
-     });
-  
-  await checkResponse(response,"Failed to update user info");
+async function userGetAll() {
+    const response = await apiFetch("/user/getall", {
+        method: "GET"
+    });
 
-  return await response.json();
-     
+    await checkResponse(response, "Failed to get users");
+    return response.json();
 }
 
-async function userChangePassword(userId, newPassword) {
-  const response = await fetch("http://localhost:8080/user/change-password", {
-    method: "PUT",
-    headers: {
-      "Authorization": `Bearer ${localStorage.getItem("userToken")}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ userId, newPassword })
-  });
+async function userDelete() {
+    const response = await apiFetch("/user/delete", {
+        method: "DELETE"
+    });
 
-  await checkResponse(response, "Failed to change password");
-  return await response.json();
+    await checkResponse(response, "Failed to schedule account deletion");
+    return response.text();
+}
+
+async function userUpdate(userData) {
+    const response = await apiFetch("/user/update", {
+        method: "PUT",
+        body: JSON.stringify(userData)
+    });
+
+    await checkResponse(response, "Failed to update user");
+    return response.json();
+}
+
+async function userChangePassword(passwordData) {
+    const response = await apiFetch("/user/change-password", {
+        method: "PUT",
+        body: JSON.stringify(passwordData)
+    });
+
+    await checkResponse(response, "Failed to change password");
+    return response.text();
 }
 
 export {
-  userDelete,
-  userGet,
-  currentUser,
-  userName,
-  userEmail,
-  userUpdate,
-  userChangePassword,
-  userGetAll
+    currentUser,
+    userName,
+    userEmail,
+    userGetAll,
+    userDelete,
+    userUpdate,
+    userChangePassword
 };

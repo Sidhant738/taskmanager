@@ -4,28 +4,31 @@ import "../../styles/cards/taskcard.css";
 export default function TaskCard({
     task,
     onDelete,
-    status,
     onEdit,
-    onState,
+    onStatusChange,
     onClick
 }) {
-
     return (
-
         <CardContainer
             className="Task"
             onClick={onClick}
         >
-
             <h2>{task.title}</h2>
 
             <p>{task.description}</p>
 
-            <nav>
+            <p>
+                Status:{" "}
+                {task.completed
+                    ? "Completed"
+                    : "Pending"}
+            </p>
 
+            <nav>
                 <button
-                    onClick={(e) => {
-                        e.stopPropagation();
+                    type="button"
+                    onClick={(event) => {
+                        event.stopPropagation();
                         onDelete(task.id);
                     }}
                 >
@@ -33,8 +36,9 @@ export default function TaskCard({
                 </button>
 
                 <button
-                    onClick={(e) => {
-                        e.stopPropagation();
+                    type="button"
+                    onClick={(event) => {
+                        event.stopPropagation();
                         onEdit(task.id);
                     }}
                 >
@@ -42,17 +46,17 @@ export default function TaskCard({
                 </button>
 
                 <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onState(task.id);
+                    type="button"
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        onStatusChange(task.id);
                     }}
                 >
-                    {status ? "Complete" : "Uncomplete"}
+                    {task.completed
+                        ? "Mark Incomplete"
+                        : "Mark Complete"}
                 </button>
-
             </nav>
-
         </CardContainer>
-
     );
 }

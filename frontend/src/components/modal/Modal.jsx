@@ -1,4 +1,4 @@
-import "../../styles/model/modeloverlay.css"
+import "../../styles/modal/modeloverlay.css"
 
 export default function Modal({isOpen,onClose,children}){
    if(!isOpen)return null;

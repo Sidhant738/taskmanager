@@ -1,128 +1,223 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import CardArea from "../components/cardArea/CardArea";
 import Header from "../components/header/Header";
 import useTask from "../hook/useTask";
 import Modal from "../components/modal/Modal";
 import EditCard from "../components/card/EditCard";
 import ViewCard from "../components/card/ViewCard";
-import ConfirmCard from "../components/card/confirm";
-import "../styles/page/dashboard.css"
+import ConfirmCard from "../components/card/Confirm";
+import "../styles/page/dashboard.css";
+
+const SORT_NEWEST = "Newest First";
+const SORT_OLDEST = "Oldest First";
+
 export default function Dashboard() {
-    const [sortMode, setSortMode] = useState(localStorage.getItem("taskmanagerDefaultSort") || "Newest First");
+    const savedSort = localStorage.getItem("taskmanagerDefaultSort");
+
+    const [sortMode, setSortMode] = useState(
+        savedSort === SORT_OLDEST
+            ? SORT_OLDEST
+            : SORT_NEWEST
+    );
 
     const {
         taskTable,
-        setTaskTable,
         editTask,
         deleteTask,
         logout,
-        addTask
+        addTask,
+        loading,
+        error
     } = useTask();
 
-    useEffect(() => {
-        const onSettingsChanged = () => {
-            setSortMode(localStorage.getItem("taskmanagerDefaultSort") || "Newest First");
-        };
-
-        window.addEventListener("settingsChanged", onSettingsChanged);
-        return () => window.removeEventListener("settingsChanged", onSettingsChanged);
-    }, []);
-
-    const [isOpen, setIsOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
     const [isViewOpen, setIsViewOpen] = useState(false);
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
     const [selectedTask, setSelectedTask] = useState(null);
     const [pendingDeleteId, setPendingDeleteId] = useState(null);
-
-    function handleClick(taskId) {
-        setIsOpen(true);
-
-        if (taskId == null) {
-            setSelectedTask(null);
-            return;
-        }
-
-        const task = taskTable.find(t => t.id === taskId);
-        setSelectedTask(task);
-    }
-
-    function handleView(task) {
-        setSelectedTask(task);
-        setIsViewOpen(true);
-    }
-
-    function handleDeletePrompt(taskId) {
-        setPendingDeleteId(taskId);
-        setIsConfirmOpen(true);
-    }
-
-    async function handleDeleteConfirmed() {
-        if (pendingDeleteId == null) return;
-        await deleteTask(pendingDeleteId);
-        setPendingDeleteId(null);
-        setIsConfirmOpen(false);
-    }
-
-    function handleStatechange(taskId) {
-
-        const task = taskTable.find(t => t.id === taskId);
-
-        if (task) {
-            editTask({
-                ...task,
-                completed: !task.completed
-            });
-        }
-    }
+    const [actionError, setActionError] = useState("");
 
     const sortedTasks = useMemo(() => {
         const tasks = [...taskTable];
 
-        if (sortMode === "Oldest First") {
-            return tasks.sort((a, b) => a.id - b.id);
-        }
+        return tasks.sort((first, second) => {
+            const firstId = Number(first.id);
+            const secondId = Number(second.id);
 
-        if (sortMode === "Priority") {
-            return tasks.sort((a, b) => {
-                if (a.completed === b.completed) {
-                    return a.title.localeCompare(b.title);
-                }
-                return a.completed ? 1 : -1;
-            });
-        }
-
-        return tasks.sort((a, b) => b.id - a.id);
+            return sortMode === SORT_OLDEST
+                ? firstId - secondId
+                : secondId - firstId;
+        });
     }, [taskTable, sortMode]);
+
+    function openCreateModal() {
+        setSelectedTask(null);
+        setActionError("");
+        setIsEditOpen(true);
+    }
+
+    function openEditModal(taskId) {
+        const task = taskTable.find(
+            (item) => item.id === taskId
+        );
+
+        if (!task) return;
+
+        setSelectedTask(task);
+        setActionError("");
+        setIsEditOpen(true);
+    }
+
+    function closeEditModal() {
+        setIsEditOpen(false);
+        setSelectedTask(null);
+    }
+
+    function openViewModal(task) {
+        setSelectedTask(task);
+        setIsViewOpen(true);
+    }
+
+    function closeViewModal() {
+        setIsViewOpen(false);
+        setSelectedTask(null);
+    }
+
+    function openDeleteModal(taskId) {
+        setPendingDeleteId(taskId);
+        setIsConfirmOpen(true);
+    }
+
+    function closeDeleteModal() {
+        setPendingDeleteId(null);
+        setIsConfirmOpen(false);
+    }
+
+    async function handleDeleteConfirmed() {
+        if (pendingDeleteId == null) return;
+
+        try {
+            setActionError("");
+            await deleteTask(pendingDeleteId);
+            closeDeleteModal();
+        } catch (err) {
+            setActionError(
+                err.message || "Failed to delete task"
+            );
+        }
+    }
+
+    async function handleStatusChange(taskId) {
+        const task = taskTable.find(
+            (item) => item.id === taskId
+        );
+
+        if (!task) return;
+
+        try {
+            setActionError("");
+
+            await editTask({
+                id: task.id,
+                title: task.title,
+                description: task.description,
+                completed: !task.completed
+            });
+        } catch (err) {
+            setActionError(
+                err.message || "Failed to update task"
+            );
+        }
+    }
+
+    async function handleSave(taskData) {
+        try {
+            setActionError("");
+
+            if (selectedTask) {
+                await editTask({
+                    id: selectedTask.id,
+                    title: taskData.title,
+                    description: taskData.description,
+                    completed: selectedTask.completed
+                });
+            } else {
+                await addTask({
+                    title: taskData.title,
+                    description: taskData.description,
+                    completed: false
+                });
+            }
+
+            closeEditModal();
+        } catch (err) {
+            setActionError(
+                err.message || "Failed to save task"
+            );
+        }
+    }
+
+    function handleSortChange(event) {
+        const value = event.target.value;
+
+        setSortMode(value);
+        localStorage.setItem(
+            "taskmanagerDefaultSort",
+            value
+        );
+    }
 
     return (
         <div className="dashboard">
-
             <Header logout={logout} />
 
+            {(actionError || error) && (
+                <p className="error">
+                    {actionError || error}
+                </p>
+            )}
+
+            <div className="dashboard-toolbar">
+                <label>
+                    Sort:
+                    <select
+                        value={sortMode}
+                        onChange={handleSortChange}
+                    >
+                        <option value={SORT_NEWEST}>
+                            Newest First
+                        </option>
+                        <option value={SORT_OLDEST}>
+                            Oldest First
+                        </option>
+                    </select>
+                </label>
+            </div>
+
             <CardArea
-                tasktable={sortedTasks}
-                settasktable={setTaskTable}
-                add={() => handleClick(null)}
-                edit={handleClick}
-                get={handleView}
-                ondelete={handleDeletePrompt}
-                onState={handleStatechange}
+                taskTable={sortedTasks}
+                onAdd={openCreateModal}
+                onEdit={openEditModal}
+                onView={openViewModal}
+                onDelete={openDeleteModal}
+                onStatusChange={handleStatusChange}
+                loading={loading}
             />
 
             {isConfirmOpen && (
                 <Modal
                     isOpen={isConfirmOpen}
-                    onClose={() => {
-                        setIsConfirmOpen(false);
-                        setPendingDeleteId(null);
-                    }}
+                    onClose={closeDeleteModal}
                 >
                     <ConfirmCard
-                        taskTitle={taskTable.find((task) => task.id === pendingDeleteId)?.title}
-                        onCancel={() => {
-                            setIsConfirmOpen(false);
-                            setPendingDeleteId(null);
-                        }}
+                        taskTitle={
+                            taskTable.find(
+                                (task) =>
+                                    task.id === pendingDeleteId
+                            )?.title
+                        }
+                        onCancel={closeDeleteModal}
                         onConfirm={handleDeleteConfirmed}
                     />
                 </Modal>
@@ -131,37 +226,27 @@ export default function Dashboard() {
             {isViewOpen && (
                 <Modal
                     isOpen={isViewOpen}
-                    onClose={() => setIsViewOpen(false)}
+                    onClose={closeViewModal}
                 >
                     <ViewCard
                         task={selectedTask}
-                        onClose={() => setIsViewOpen(false)}
+                        onClose={closeViewModal}
                     />
                 </Modal>
             )}
 
-            {isOpen && (
+            {isEditOpen && (
                 <Modal
-                    isOpen={isOpen}
-                    onClose={() => setIsOpen(false)}
+                    isOpen={isEditOpen}
+                    onClose={closeEditModal}
                 >
                     <EditCard
                         task={selectedTask}
-                        onCancel={() => setIsOpen(false)}
-                        onSave={(taskData) => {
-
-                            if (selectedTask) {
-                                editTask(taskData);
-                            } else {
-                                addTask(taskData);
-                            }
-
-                            setIsOpen(false);
-                        }}
+                        onCancel={closeEditModal}
+                        onSave={handleSave}
                     />
                 </Modal>
             )}
-
         </div>
     );
 }

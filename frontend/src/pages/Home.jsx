@@ -10,33 +10,7 @@ function Home() {
 
       <nav className="navbar">
 
-        <div className="logo">
-          TaskFlow
-        </div>
-
-        <ul className="nav-links">
-          <li>Home</li>
-          <li>Features</li>
-          <li>About</li>
-          <li>Contact</li>
-        </ul>
-
-        <div className="nav-buttons">
-          <button
-            className="login-btn"
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </button>
-
-          <button
-            className="register-btn"
-            onClick={() => navigate("/register")}
-          >
-            Register
-          </button>
-        </div>
-
+        
       </nav>
 
       <section className="hero">

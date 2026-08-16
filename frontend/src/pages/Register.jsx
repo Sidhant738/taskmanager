@@ -1,182 +1,210 @@
 import { useEffect, useState } from "react";
-import {useNavigate} from "react-router-dom"
-import { userName, userEmail } from "../services/UserService"
-import { register } from "../services/AuthService"
-import "../styles/page/register.css"
-function RegisterForm(){
- 
-   const navigate=useNavigate();
+import { useNavigate } from "react-router-dom";
+import { userName, userEmail } from "../services/UserService";
+import { register } from "../services/AuthService";
+import "../styles/page/register.css";
 
-   const[name,setname]=useState("");
-   const[email,setemail]=useState("");
-   const[password,setpassword]=useState("");
-   
-   const [loadError,setloadError]=useState("");
+export default function RegisterForm() {
+    const navigate = useNavigate();
 
-   const [userNameError, setUserNameError] = useState("");
-   const [userEmailError, setUserEmailError] = useState("");
-   
-   const [loading,setloading]=useState(false);
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-   useEffect(()=>{
-       if(name.trim()===""){
+    const [userNameError, setUserNameError] = useState("");
+    const [userEmailError, setUserEmailError] = useState("");
+    const [loadError, setLoadError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const cleanName = name.trim();
+
+        if (!cleanName) {
             setUserNameError("");
             return;
-       }
-      if (name.length < 3) {
-        setUserNameError("Username must be at least 3 characters");
-        return;
-       }
-       const timer=setTimeout(()=>{
-            checkUserName(name);
-       },1000);
+        }
 
-       return ()=>{
-            clearTimeout(timer);
-       }
-   },[name]);
-
-   useEffect(()=>{
-       if(email.trim()===""){
-            setUserEmailError("");
+        if (cleanName.length < 3) {
+            setUserNameError(
+                "Username must be at least 3 characters."
+            );
             return;
-       }
+        }
 
-       const timer=setTimeout(()=>{
-            checkUserEmail(email);
-       },1000);
+        const timer = setTimeout(async () => {
+            try {
+                const exists = await userName(cleanName);
 
-       return ()=>{
-            clearTimeout(timer);
-       }
-   },[email]);
-
-
-   async function handleSubmit(e){
-    e.preventDefault();
-          
-       if(userNameError||userEmailError){
-            return;
+                setUserNameError(
+                    exists
+                        ? "Username already taken."
+                        : ""
+                );
+            } catch {
+                setUserNameError("");
             }
+        }, 500);
 
-       setloading(true);
+        return () => clearTimeout(timer);
+    }, [name]);
 
-        try{
-              const Token=await register({
-               name,
-               email,
-               password
-               });
-            
-               localStorage.setItem("userToken",Token);
+    useEffect(() => {
+        const cleanEmail = email.trim();
 
-               navigate("/dashboard",{replace:true});
-        }catch (error){
-       
-         setloadError(error.message);
-
-         }finally{
-         setloading(false);
-         }
-   }
-
-   async function checkUserName(name){
-  
-        try{
-              const response=await userName(name);
-              
-              if(!response){
-               setUserNameError("");      
-              }else{
-                setUserNameError("username already taken");
-              }
-
-        }catch (error){
-          console.log(error.message);
-
-         }
-   }
-  async function checkUserEmail(email){
-  
-        try{
-              const response=await userEmail(email);
-
-              if(!response){
-               setUserEmailError("");      
-              }else{
-                setUserEmailError("email already taken");
-              }
-
-        }catch (error){
-           console.log(error.message);
-         }
-   }
-
-    return(
-<form className="register-form" onSubmit={handleSubmit}>
-
-    <h1>Create Account</h1>
-
-    <p className="error">{loadError}</p>
-
-    <label>Name</label>
-
-    <input
-        type="text"
-        name="userName"
-        value={name}
-        onChange={(e)=>{
-            setname(e.target.value);
-            setUserNameError("");
-        }}
-        required
-    />
-
-    <p className="field-error">{userNameError}</p>
-
-    <label>Email</label>
-
-    <input
-        type="email"
-        name="userEmail"
-        value={email}
-        onChange={(e)=>{
-            setemail(e.target.value);
+        if (!cleanEmail) {
             setUserEmailError("");
-        }}
-        required
-    />
+            return;
+        }
 
-    <p className="field-error">{userEmailError}</p>
+        const timer = setTimeout(async () => {
+            try {
+                const exists = await userEmail(cleanEmail);
 
-    <label>Password</label>
+                setUserEmailError(
+                    exists
+                        ? "Email already taken."
+                        : ""
+                );
+            } catch {
+                setUserEmailError("");
+            }
+        }, 500);
 
-    <input
-        type="password"
-        name="password"
-        value={password}
-        minLength={8}
-        onChange={(e)=>setpassword(e.target.value)}
-        required
-    />
+        return () => clearTimeout(timer);
+    }, [email]);
 
-    <input
-        className="register-submit"
-        type="submit"
-        value={loading ? "Creating Account..." : "Register"}
-        disabled={loading}
-    />
+    async function handleSubmit(event) {
+        event.preventDefault();
 
-    <button
-        className="login-link"
-        type="button"
-        onClick={()=>navigate("/login")}
-    >
-        Already have an account?
-    </button>
+        if (userNameError || userEmailError) {
+            return;
+        }
 
-</form>
+        setLoading(true);
+        setLoadError("");
+
+        try {
+            const token = await register({
+                name: name.trim(),
+                email: email.trim(),
+                password
+            });
+
+            localStorage.setItem("userToken", token);
+            navigate("/dashboard", {
+                replace: true
+            });
+        } catch (error) {
+            setLoadError(
+                error.message || "Failed to register."
+            );
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return (
+        <form
+            className="register-form"
+            onSubmit={handleSubmit}
+        >
+            <h1>Create Account</h1>
+
+            {loadError && (
+                <p className="error">{loadError}</p>
+            )}
+
+            <label htmlFor="register-name">
+                Name
+            </label>
+
+            <input
+                id="register-name"
+                type="text"
+                name="name"
+                value={name}
+                onChange={(event) => {
+                    setName(event.target.value);
+                    setUserNameError("");
+                    setLoadError("");
+                }}
+                minLength={3}
+                maxLength={50}
+                required
+                disabled={loading}
+            />
+
+            {userNameError && (
+                <p className="field-error">
+                    {userNameError}
+                </p>
+            )}
+
+            <label htmlFor="register-email">
+                Email
+            </label>
+
+            <input
+                id="register-email"
+                type="email"
+                name="email"
+                value={email}
+                onChange={(event) => {
+                    setEmail(event.target.value);
+                    setUserEmailError("");
+                    setLoadError("");
+                }}
+                required
+                disabled={loading}
+            />
+
+            {userEmailError && (
+                <p className="field-error">
+                    {userEmailError}
+                </p>
+            )}
+
+            <label htmlFor="register-password">
+                Password
+            </label>
+
+            <input
+                id="register-password"
+                type="password"
+                name="password"
+                value={password}
+                minLength={8}
+                maxLength={20}
+                onChange={(event) =>
+                    setPassword(event.target.value)
+                }
+                required
+                disabled={loading}
+            />
+
+            <input
+                className="register-submit"
+                type="submit"
+                value={
+                    loading
+                        ? "Creating Account..."
+                        : "Register"
+                }
+                disabled={
+                    loading ||
+                    Boolean(userNameError) ||
+                    Boolean(userEmailError)
+                }
+            />
+
+            <button
+                className="login-link"
+                type="button"
+                onClick={() => navigate("/login")}
+                disabled={loading}
+            >
+                Already have an account?
+            </button>
+        </form>
     );
-}   
-
-export default RegisterForm;
+}

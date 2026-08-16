@@ -1,28 +1,40 @@
 async function checkResponse(response, defaultMessage) {
-  if (!response.ok) {
-    let message = defaultMessage;
-    let body = null;
+    if (!response.ok) {
+        let message = defaultMessage;
+        let body = null;
 
-    try {
-      body = await response.json();
-      if (body && body.message) {
-        message = body.message;
-      } else if (typeof body === "string" && body.length) {
-        message = body;
-      }
-    } catch {
-      body = await response.text();
-      if (body) {
-        message = body;
-      }
+        try {
+            body = await response.text();
+
+            if (body) {
+                try {
+                    const parsedBody = JSON.parse(body);
+
+                    if (parsedBody && parsedBody.message) {
+                        message = parsedBody.message;
+                    } else {
+                        message = body;
+                    }
+
+                } catch {
+                    // Response was plain text
+                    message = body;
+                }
+            }
+
+        } catch {
+            
+        }
+
+        const error = new Error(message || defaultMessage);
+
+        error.status = response.status;
+        error.body = body;
+
+        throw error;
     }
 
-    const error = new Error(message || defaultMessage);
-    error.status = response.status;
-    error.body = body;
-    throw error;
-  }
-  return response;
+    return response;
 }
 
 export { checkResponse };

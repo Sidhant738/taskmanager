@@ -4,57 +4,58 @@ import EmptyCard from "../card/EmptyCard";
 import "../../styles/cardarea/cardarea.css";
 
 export default function CardArea({
-    tasktable,
-    settasktable,
-    add,
-    ondelete,
-    get,
-    edit,
-    onState
+    taskTable,
+    onAdd,
+    onDelete,
+    onEdit,
+    onView,
+    onStatusChange,
+    loading
 }) {
+    const [search, setSearch] = useState("");
 
-    const [search, setsearch] = useState("");
-
-    const filtertask = tasktable.filter(task =>
-        task.title.toLowerCase().includes(search.toLowerCase())
+    const filteredTasks = taskTable.filter((task) =>
+        (task.title || "")
+            .toLowerCase()
+            .includes(search.toLowerCase())
     );
 
     return (
         <div className="cardarea">
-
             <div className="search-container">
                 <div className="search-box">
                     <span className="search-icon"></span>
+
                     <input
                         className="search-input"
                         type="text"
                         placeholder="Search tasks by title"
                         value={search}
-                        onChange={(e) => setsearch(e.target.value)}
+                        onChange={(event) =>
+                            setSearch(event.target.value)
+                        }
                     />
                 </div>
             </div>
 
             <div className="task-container">
+                <EmptyCard onClick={onAdd} />
 
-                <EmptyCard onClick={add} />
-
-                {filtertask.map(task => (
-
-                    <TaskCard
-                        key={task.id}
-                        task={task}
-                        onDelete={ondelete}
-                        onEdit={edit}
-                        onState={onState}
-                        status={task.completed}
-                        onClick={() => get(task)}
-                    />
-
-                ))}
-
+                {loading ? (
+                    <p>Loading tasks...</p>
+                ) : (
+                    filteredTasks.map((task) => (
+                        <TaskCard
+                            key={task.id}
+                            task={task}
+                            onDelete={onDelete}
+                            onEdit={onEdit}
+                            onStatusChange={onStatusChange}
+                            onClick={() => onView(task)}
+                        />
+                    ))
+                )}
             </div>
-
         </div>
     );
 }

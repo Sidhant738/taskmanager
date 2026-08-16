@@ -42,6 +42,7 @@ body{
 
 .nav-buttons{
     display:flex;
+    
     gap:15px;
 }
 
