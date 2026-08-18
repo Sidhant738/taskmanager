@@ -1,8 +1,6 @@
 import { apiFetch } from "../security/apifetch";
 import { checkResponse } from "./apiHelper";
 
-const BASE_URL = "http://localhost:8080";
-
 async function currentUser() {
     const response = await apiFetch("/user/me", {
         method: "GET"
@@ -13,8 +11,11 @@ async function currentUser() {
 }
 
 async function userName(username) {
-    const response = await fetch(
-        `${BASE_URL}/user/username/${encodeURIComponent(username)}`
+    const response = await apiFetch(
+        `/user/username/${encodeURIComponent(username)}`,
+        {
+            method: "GET"
+        }
     );
 
     await checkResponse(response, "Failed to check username");
@@ -22,8 +23,11 @@ async function userName(username) {
 }
 
 async function userEmail(email) {
-    const response = await fetch(
-        `${BASE_URL}/user/useremail/${encodeURIComponent(email)}`
+    const response = await apiFetch(
+        `/user/useremail/${encodeURIComponent(email)}`,
+        {
+            method: "GET"
+        }
     );
 
     await checkResponse(response, "Failed to check email");

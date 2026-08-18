@@ -100,7 +100,7 @@ export default function Profile() {
 
                 <button
                     className="page-back"
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate("/Dashboard")}
                 >
                     ← Back
                 </button>

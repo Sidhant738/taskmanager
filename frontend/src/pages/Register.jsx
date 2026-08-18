@@ -16,18 +16,16 @@ export default function RegisterForm() {
     const [loadError, setLoadError] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const cleanName = name.trim();
+    const cleanEmail = email.trim();
+
+    const nameValidationError =
+        cleanName && cleanName.length < 3
+            ? "Username must be at least 3 characters."
+            : "";
+
     useEffect(() => {
-        const cleanName = name.trim();
-
-        if (!cleanName) {
-            setUserNameError("");
-            return;
-        }
-
-        if (cleanName.length < 3) {
-            setUserNameError(
-                "Username must be at least 3 characters."
-            );
+        if (!cleanName || cleanName.length < 3) {
             return;
         }
 
@@ -46,13 +44,10 @@ export default function RegisterForm() {
         }, 500);
 
         return () => clearTimeout(timer);
-    }, [name]);
+    }, [cleanName]);
 
     useEffect(() => {
-        const cleanEmail = email.trim();
-
         if (!cleanEmail) {
-            setUserEmailError("");
             return;
         }
 
@@ -71,12 +66,16 @@ export default function RegisterForm() {
         }, 500);
 
         return () => clearTimeout(timer);
-    }, [email]);
+    }, [cleanEmail]);
 
     async function handleSubmit(event) {
         event.preventDefault();
 
-        if (userNameError || userEmailError) {
+        if (
+            nameValidationError ||
+            userNameError ||
+            userEmailError
+        ) {
             return;
         }
 
@@ -85,12 +84,13 @@ export default function RegisterForm() {
 
         try {
             const token = await register({
-                name: name.trim(),
-                email: email.trim(),
+                name: cleanName,
+                email: cleanEmail,
                 password
             });
 
             localStorage.setItem("userToken", token);
+
             navigate("/dashboard", {
                 replace: true
             });
@@ -134,9 +134,9 @@ export default function RegisterForm() {
                 disabled={loading}
             />
 
-            {userNameError && (
+            {(nameValidationError || userNameError) && (
                 <p className="field-error">
-                    {userNameError}
+                    {nameValidationError || userNameError}
                 </p>
             )}
 
@@ -192,6 +192,7 @@ export default function RegisterForm() {
                 }
                 disabled={
                     loading ||
+                    Boolean(nameValidationError) ||
                     Boolean(userNameError) ||
                     Boolean(userEmailError)
                 }

@@ -15,15 +15,13 @@ async function checkResponse(response, defaultMessage) {
                     } else {
                         message = body;
                     }
-
                 } catch {
                     // Response was plain text
                     message = body;
                 }
             }
-
         } catch {
-            
+            // Keep the default error message if the response body cannot be read.
         }
 
         const error = new Error(message || defaultMessage);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CardContainer from "./CardContainer";
 import "../../styles/cards/editcard.css";
 
@@ -7,13 +7,10 @@ export default function EditCard({
     onCancel,
     onSave
 }) {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-
-    useEffect(() => {
-        setTitle(task?.title ?? "");
-        setDescription(task?.description ?? "");
-    }, [task]);
+    const [title, setTitle] = useState(task?.title ?? "");
+    const [description, setDescription] = useState(
+        task?.description ?? ""
+    );
 
     function handleSubmit(event) {
         event.preventDefault();

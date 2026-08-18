@@ -1,0 +1,37 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: taskmanager-postgres
+    environment:
+      POSTGRES_DB: taskmanager
+      POSTGRES_USER: siddhant
+      POSTGRES_PASSWORD: CHANGE_THIS_PASSWORD
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    container_name: taskmanager-backend
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/taskmanager
+      SPRING_DATASOURCE_USERNAME: siddhant
+      SPRING_DATASOURCE_PASSWORD: CHANGE_THIS_PASSWORD
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: taskmanager-frontend
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+
+volumes:
+  postgres_data:

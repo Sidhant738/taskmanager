@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import {
+import { useEffect, useState } from "react";
+import { 
     taskCreate,
     taskDelete,
     taskGet,
@@ -12,37 +12,77 @@ export default function useTask() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    const loadTask = useCallback(async () => {
+    useEffect(() => {
+        let active = true;
+
+        async function loadInitialTasks() {
+            try {
+                const tasks = await taskGetAll();
+
+                if (active) {
+                    setTaskTable(
+                        Array.isArray(tasks) ? tasks : []
+                    );
+                    setError("");
+                }
+            } catch (err) {
+                if (active) {
+                    setError(
+                        err.message || "Failed to load tasks"
+                    );
+                }
+            } finally {
+                if (active) {
+                    setLoading(false);
+                }
+            }
+        }
+
+        loadInitialTasks();
+
+        return () => {
+            active = false;
+        };
+    }, []);
+
+    async function loadTask() {
         setLoading(true);
         setError("");
 
         try {
             const tasks = await taskGetAll();
-            setTaskTable(Array.isArray(tasks) ? tasks : []);
+
+            setTaskTable(
+                Array.isArray(tasks) ? tasks : []
+            );
+
+            return tasks;
         } catch (err) {
-            setError(err.message || "Failed to load tasks");
+            setError(
+                err.message || "Failed to load tasks"
+            );
             throw err;
         } finally {
             setLoading(false);
         }
-    }, []);
-
-    useEffect(() => {
-        loadTask().catch(() => {});
-    }, [loadTask]);
+    }
 
     async function addTask(taskData) {
         setError("");
 
         try {
             const createdTask = await taskCreate(taskData);
+
             setTaskTable((previousTasks) => [
                 ...previousTasks,
                 createdTask
             ]);
+
             return createdTask;
         } catch (err) {
-            setError(err.message || "Failed to create task");
+            setError(
+                err.message || "Failed to create task"
+            );
             throw err;
         }
     }
@@ -63,7 +103,9 @@ export default function useTask() {
 
             return updatedTask;
         } catch (err) {
-            setError(err.message || "Failed to update task");
+            setError(
+                err.message || "Failed to update task"
+            );
             throw err;
         }
     }
@@ -74,7 +116,9 @@ export default function useTask() {
         try {
             return await taskGet(taskId);
         } catch (err) {
-            setError(err.message || "Failed to get task");
+            setError(
+                err.message || "Failed to get task"
+            );
             throw err;
         }
     }
@@ -91,7 +135,9 @@ export default function useTask() {
                 )
             );
         } catch (err) {
-            setError(err.message || "Failed to delete task");
+            setError(
+                err.message || "Failed to delete task"
+            );
             throw err;
         }
     }

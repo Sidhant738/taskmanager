@@ -78,7 +78,7 @@ export default function Settings() {
 
                 <button
                     className="page-back"
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate("/Dashboard")}
                 >
                     ← Back
                 </button>

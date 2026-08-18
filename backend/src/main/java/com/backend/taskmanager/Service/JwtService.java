@@ -9,20 +9,20 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class JwtService {
 
-   
-    private static final String SECRET_KEY =
-            "mysecretkeymysecretkeymysecretkey12";
+    @Value("${jwt.secret}")
+    private  String SECRET_KEY;
 
     public String generateToken(String username) {
 
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 30))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60*60))
                 .signWith(getSigningKey())
                 .compact();
     }
@@ -65,7 +65,7 @@ public class JwtService {
                 .getPayload();
     }
 
-   private SecretKey getSigningKey() {
-    return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
-}
+  private SecretKey getSigningKey() {
+    return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+  }
 }

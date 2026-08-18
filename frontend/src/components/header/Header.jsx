@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/header/header.css";
 
-function Header({ profile, setting, logout }) {
+function Header({  logout }) {
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
 

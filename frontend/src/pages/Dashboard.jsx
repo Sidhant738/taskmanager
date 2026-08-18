@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import CardArea from "../components/cardArea/CardArea";
 import Header from "../components/header/Header";
 import useTask from "../hook/useTask";
@@ -8,18 +8,12 @@ import ViewCard from "../components/card/ViewCard";
 import ConfirmCard from "../components/card/Confirm";
 import "../styles/page/dashboard.css";
 
-const SORT_NEWEST = "Newest First";
-const SORT_OLDEST = "Oldest First";
+
 
 export default function Dashboard() {
-    const savedSort = localStorage.getItem("taskmanagerDefaultSort");
+    
 
-    const [sortMode, setSortMode] = useState(
-        savedSort === SORT_OLDEST
-            ? SORT_OLDEST
-            : SORT_NEWEST
-    );
-
+    
     const {
         taskTable,
         editTask,
@@ -38,18 +32,7 @@ export default function Dashboard() {
     const [pendingDeleteId, setPendingDeleteId] = useState(null);
     const [actionError, setActionError] = useState("");
 
-    const sortedTasks = useMemo(() => {
-        const tasks = [...taskTable];
-
-        return tasks.sort((first, second) => {
-            const firstId = Number(first.id);
-            const secondId = Number(second.id);
-
-            return sortMode === SORT_OLDEST
-                ? firstId - secondId
-                : secondId - firstId;
-        });
-    }, [taskTable, sortMode]);
+   
 
     function openCreateModal() {
         setSelectedTask(null);
@@ -158,15 +141,7 @@ export default function Dashboard() {
         }
     }
 
-    function handleSortChange(event) {
-        const value = event.target.value;
-
-        setSortMode(value);
-        localStorage.setItem(
-            "taskmanagerDefaultSort",
-            value
-        );
-    }
+ 
 
     return (
         <div className="dashboard">
@@ -178,25 +153,10 @@ export default function Dashboard() {
                 </p>
             )}
 
-            <div className="dashboard-toolbar">
-                <label>
-                    Sort:
-                    <select
-                        value={sortMode}
-                        onChange={handleSortChange}
-                    >
-                        <option value={SORT_NEWEST}>
-                            Newest First
-                        </option>
-                        <option value={SORT_OLDEST}>
-                            Oldest First
-                        </option>
-                    </select>
-                </label>
-            </div>
+         
 
             <CardArea
-                taskTable={sortedTasks}
+                taskTable={taskTable}
                 onAdd={openCreateModal}
                 onEdit={openEditModal}
                 onView={openViewModal}
@@ -241,6 +201,7 @@ export default function Dashboard() {
                     onClose={closeEditModal}
                 >
                     <EditCard
+                        key={selectedTask?.id ?? "new-task"}
                         task={selectedTask}
                         onCancel={closeEditModal}
                         onSave={handleSave}
