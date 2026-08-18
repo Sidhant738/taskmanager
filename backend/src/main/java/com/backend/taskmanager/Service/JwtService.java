@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 public class JwtService {
 
     @Value("${jwt.secret}")
-    private  String SECRET_KEY;
+    private  String secretKey;
 
     public String generateToken(String username) {
 
