@@ -27,10 +27,6 @@ import com.backend.taskmanager.Service.UserService;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(
-        origins = "http://localhost:5173",
-        allowCredentials = "true"
-)
 public class AuthController {
 
     @Autowired

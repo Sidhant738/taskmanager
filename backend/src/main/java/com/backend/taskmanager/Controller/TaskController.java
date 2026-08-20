@@ -10,9 +10,10 @@ import com.backend.taskmanager.Service.TaskService;
 import com.backend.taskmanager.DTO.TaskDto;
 import jakarta.validation.Valid;
 
+
+
 @RestController
 @RequestMapping("/task")
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class TaskController {
 
     @Autowired

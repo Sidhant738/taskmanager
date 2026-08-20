@@ -1,6 +1,6 @@
 import { checkResponse } from "./apiHelper";
 
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 async function register(registerData) {
     const response = await fetch(`${BASE_URL}/auth/register`, {

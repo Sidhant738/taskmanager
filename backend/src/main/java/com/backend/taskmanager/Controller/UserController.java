@@ -13,7 +13,6 @@ import com.backend.taskmanager.Entity.User;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class UserController {
 
     @Autowired
