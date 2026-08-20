@@ -30,11 +30,12 @@ jobs:
           --health-retries 5
 
     env:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/taskmanager
-      SPRING_DATASOURCE_USERNAME: siddhant
-      SPRING_DATASOURCE_PASSWORD: testpassword
-      JWT_SECRET: ci-test-secret-key
-
+     SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/taskmanager
+     SPRING_DATASOURCE_USERNAME: siddhant
+     SPRING_DATASOURCE_PASSWORD: testpassword
+     JWT_SECRET: ci-test-secret-key
+     FRONTEND_URL: http://localhost:5173
+ 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
