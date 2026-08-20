@@ -349,3 +349,7 @@ This project was developed to gain practical experience with:
 ## License
 
 This project is for educational and portfolio purposes.
+
+## Live Demo
+
+[Open TaskManager](https://taskmanager-1-62vr.onrender.com/)
