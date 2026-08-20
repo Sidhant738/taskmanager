@@ -30,7 +30,7 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
 
-    @Value("${frontent.url}")
+    @Value("${frontend.url}")
     private String frontent_Url;
 
     @Autowired
