@@ -18,8 +18,10 @@ services:
       - postgres
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/taskmanager
-      SPRING_DATASOURCE_USERNAME: siddhant
       SPRING_DATASOURCE_PASSWORD: CHANGE_THIS_PASSWORD
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      FRONTEND_URL: ${FRONTEND_URL}
+    
       JWT_SECRET: ${JWT_SECRET}
     ports:
       - "8080:8080"
